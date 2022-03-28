@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Recarro.Data;
+using Recarro.Infrastructure;
 
 namespace Recarro
 {
@@ -18,7 +19,7 @@ namespace Recarro
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options
+            services.AddDbContext<RecarroDbContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services
@@ -32,7 +33,7 @@ namespace Recarro
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<RecarroDbContext>();
 
             services
                 .AddControllersWithViews();
@@ -40,6 +41,8 @@ namespace Recarro
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.MigrateDatabase();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
