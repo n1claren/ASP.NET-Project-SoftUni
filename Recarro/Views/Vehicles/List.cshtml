@@ -1,0 +1,16 @@
+﻿@model IEnumerable<ListingViewModel>
+
+<div class="row">
+    @foreach (var vehicle in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img class="card-img-top" src="@vehicle.ImageURL" alt="@vehicle.Year @vehicle.Make @vehicle.Model">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                    <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

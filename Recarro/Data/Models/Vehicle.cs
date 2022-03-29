@@ -27,6 +27,8 @@ namespace Recarro.Data.Models
         [Required]
         public decimal PricePerDay { get; set; }
 
+        public bool IsAvailable { get; set; }
+
         [Required]
         public int CategoryId { get; init; }
 

@@ -50,13 +50,33 @@ namespace Recarro.Controllers
                 Description = vehicleModel.Description,
                 PricePerDay = vehicleModel.PricePerDay,
                 CategoryId = vehicleModel.CategoryId,
-                EngineTypeId = vehicleModel.EngineTypeId
+                EngineTypeId = vehicleModel.EngineTypeId,
+                IsAvailable = true
             };
 
             this.data.Vehicles.Add(vehicle);
             this.data.SaveChanges();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult List()
+        {
+            var vehicles = this.data
+                    .Vehicles
+                    .Where(v => v.IsAvailable == true)
+                    .OrderByDescending(v => v.Id)
+                    .Select(v => new ListingViewModel
+                    {
+                        Id = v.Id,
+                        Make = v.Make,
+                        Model = v.Model,
+                        Year = v.Year,
+                        ImageURL = v.ImageURL
+                    })
+                    .ToList();
+
+            return View(vehicles);
         }
 
         private IEnumerable<CreateCategoryModel> GetVehicleCategories()
