@@ -60,23 +60,55 @@ namespace Recarro.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult List()
+        public IActionResult List([FromQuery]SearchQueryModel query)
         {
-            var vehicles = this.data
-                    .Vehicles
-                    .Where(v => v.IsAvailable == true)
-                    .OrderByDescending(v => v.Id)
-                    .Select(v => new ListingViewModel
-                    {
-                        Id = v.Id,
-                        Make = v.Make,
-                        Model = v.Model,
-                        Year = v.Year,
-                        ImageURL = v.ImageURL
-                    })
-                    .ToList();
+            var vehicleQuery = this.data.Vehicles.AsQueryable();
 
-            return View(vehicles);
+            if (!string.IsNullOrWhiteSpace(query.Make))
+            {
+                vehicleQuery = vehicleQuery.Where(v => v.Make == query.Make);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                vehicleQuery = vehicleQuery.Where(v => 
+                (v.Make + " " + v.Model).ToLower().Contains(query.SearchTerm.ToLower()));
+            }
+
+            vehicleQuery = query.Sorting switch
+            {
+                VehicleSorting.Year => vehicleQuery.OrderByDescending(v => v.Year),
+                VehicleSorting.MakeModels => vehicleQuery.OrderByDescending(v => v.Make).ThenBy(v => v.Model),
+                VehicleSorting.Created or _ => vehicleQuery.OrderByDescending(v => v.Id),
+            };
+
+            var vehicles = vehicleQuery
+                .Skip((query.CurrentPage - 1) * SearchQueryModel.VehiclesPerPage)
+                .Take(SearchQueryModel.VehiclesPerPage)
+                .Where(v => v.IsAvailable == true)
+                .Select(v => new ListingViewModel
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year,
+                    ImageURL = v.ImageURL
+                })
+                .ToList();
+
+            var makes = this.data
+                .Vehicles
+                .Select(v => v.Make)
+                .Distinct()
+                .ToList();
+
+            var totalCars = vehicleQuery.Count();
+
+            query.TotalCars = totalCars;
+            query.Makes = makes;
+            query.Vehicles = vehicles;
+
+            return View(query);
         }
 
         private IEnumerable<CreateCategoryModel> GetVehicleCategories()
