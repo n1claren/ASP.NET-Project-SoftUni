@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Recarro.Data.Models;
 
@@ -11,11 +12,13 @@ namespace Recarro.Data
         {
         }
 
-        public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Vehicle> Vehicles { get; init; }
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; init; }
 
-        public DbSet<EngineType> EngineTypes { get; set; }
+        public DbSet<EngineType> EngineTypes { get; init; }
+
+        public DbSet<Renter> Renters { get; init; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,7 +39,21 @@ namespace Recarro.Data
             builder
                 .Entity<Vehicle>()
                 .Property(p => p.PricePerDay)
-                .HasColumnType("decimal(18,4)");
+                .HasColumnType("decimal(18,3)");
+
+            builder
+                .Entity<Vehicle>()
+                .HasOne(v => v.Renter)
+                .WithMany(r => r.Vehicles)
+                .HasForeignKey(v => v.RenterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Renter>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Renter>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

@@ -38,5 +38,9 @@ namespace Recarro.Data.Models
         public int EngineTypeId { get; init; }
 
         public EngineType EngineType { get; init; }
+
+        public int RenterId { get; init; }
+
+        public Renter Renter { get; init; }
     }
 }

@@ -16,5 +16,9 @@ namespace Recarro.Data
 
         public const int YearMin = 2000;
         public const int YearMax = 2050;
+
+        public const int RenterNameMinLength = 3;
+        public const int RenterNameMaxLength = 30;
+        public const int RenterPhoneNumberMaxLength = 30;
     }
 }

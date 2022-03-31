@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Recarro.Data;
 using Recarro.Data.Models;
+using Recarro.Infrastructure;
 using Recarro.Models.Vehicles;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Recarro.Controllers
 {
@@ -14,15 +17,36 @@ namespace Recarro.Controllers
         public VehiclesController(RecarroDbContext data)
             => this.data = data;
 
-        public IActionResult Create() => View(new CreateVehicleModel
+        [Authorize]
+        public IActionResult Create()
         {
-            Categories = this.GetVehicleCategories(),
-            EngineTypes = this.GetEngineTypes()
-        });
+            if (!this.UserIsRenter())
+            {
+                return RedirectToAction("Create", "Renters");
+            }
+
+            return View(new CreateVehicleModel
+            {
+                Categories = this.GetVehicleCategories(),
+                EngineTypes = this.GetEngineTypes()
+            });
+        }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create(CreateVehicleModel vehicleModel)
         {
+            var renterId = this.data
+                .Renters
+                .Where(r => r.UserId == this.User.GetId())
+                .Select(r => r.Id)
+                .FirstOrDefault();
+
+            if (renterId == 0)
+            {
+                return RedirectToAction("Create", "Renters");
+            }
+
             if (!this.data.Categories.Any(c => c.Id == vehicleModel.CategoryId))
             {
                 this.ModelState.AddModelError(nameof(vehicleModel.CategoryId), "Category does not exist!");
@@ -51,6 +75,7 @@ namespace Recarro.Controllers
                 PricePerDay = vehicleModel.PricePerDay,
                 CategoryId = vehicleModel.CategoryId,
                 EngineTypeId = vehicleModel.EngineTypeId,
+                RenterId = renterId,
                 IsAvailable = true
             };
 
@@ -130,5 +155,8 @@ namespace Recarro.Controllers
                     Type = c.Type
                 })
                 .ToList();
+
+        private bool UserIsRenter()
+            => this.data.Renters.Any(r => r.UserId == this.User.GetId());
     }   
 }
