@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$('#stats-button').on('click', ev => {
+    $.get('api/stats', (data) => {
+        $('#addUsers').text('Registered users: ' + data.totalUsers);
+        $('#addVehicles').text('Registered vehicles: ' + data.totalVehicles);
+        $('#addRents').text('Total rents: ' + data.totalRents);
+    });
 
-// Write your JavaScript code.
+    $('#statSelect').removeClass('d-none');
+    $('#stats-button').hide();
+});

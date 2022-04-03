@@ -10,6 +10,19 @@
     </div>
 </div>
 
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <button class="btn btn-dark" id="stats-button">Show Stats</button>
+    </div>
+</div>
+
+<ul class="list-group d-none mb-5" id="statSelect">
+    <li class="list-group-item active">Recarro app traffic:</li>
+    <li class="list-group-item" id="addUsers"></li>
+    <li class="list-group-item" id="addVehicles"></li>
+    <li class="list-group-item" id="addRents"></li>
+</ul>
+
 @if (!Model.Vehicles.Any())
 {
     <div class="jumbotron">
@@ -56,4 +69,6 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+
+    <script src="~/js/site.js"></script>
 }
