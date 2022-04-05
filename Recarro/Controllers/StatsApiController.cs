@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Recarro.Interfaces.Stats;
+using Recarro.Services.Stats;
+
 
 namespace Recarro.Controllers
 {
@@ -7,9 +8,9 @@ namespace Recarro.Controllers
     [Route("api/stats")]
     public class StatsApiController : ControllerBase
     {
-        private readonly StatsService stats;
+        private readonly IStatsService stats;
 
-        public StatsApiController(StatsService stats) 
+        public StatsApiController(IStatsService stats) 
             => this.stats = stats;
 
         [HttpGet]

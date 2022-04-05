@@ -1,34 +1,38 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Recarro.Data;
-using Recarro.Data.Models;
 using Recarro.Infrastructure;
+using Recarro.Services.Vehicles;
 using Recarro.Models.Vehicles;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using Recarro.Services.Users;
 
 namespace Recarro.Controllers
 {
     public class VehiclesController : Controller
     {
-        private readonly RecarroDbContext data;
+        private readonly IVehicleService vService;
+        private readonly IUserService uService;
 
-        public VehiclesController(RecarroDbContext data)
-            => this.data = data;
+        public VehiclesController(IVehicleService vService, IUserService uService)
+        {
+            this.vService = vService;
+            this.uService = uService;
+        }
 
         [Authorize]
         public IActionResult Create()
         {
-            if (!this.UserIsRenter())
+            var userId = this.User.GetId();
+            var userIsRenter = this.uService.UserIsRenter(userId);
+
+            if (!userIsRenter)
             {
                 return RedirectToAction("Create", "Renters");
             }
 
             return View(new CreateVehicleModel
             {
-                Categories = this.GetVehicleCategories(),
-                EngineTypes = this.GetEngineTypes()
+                Categories = this.vService.GetVehicleCategories(),
+                EngineTypes = this.vService.GetEngineTypes()
             });
         }
 
@@ -36,127 +40,50 @@ namespace Recarro.Controllers
         [Authorize]
         public IActionResult Create(CreateVehicleModel vehicleModel)
         {
-            var renterId = this.data
-                .Renters
-                .Where(r => r.UserId == this.User.GetId())
-                .Select(r => r.Id)
-                .FirstOrDefault();
+            var userId = this.User.GetId();
+            var renterId = uService.GetRenterId(userId);
 
             if (renterId == 0)
             {
                 return RedirectToAction("Create", "Renters");
             }
 
-            if (!this.data.Categories.Any(c => c.Id == vehicleModel.CategoryId))
+            if (!this.vService.CategoryExists(vehicleModel.CategoryId))
             {
                 this.ModelState.AddModelError(nameof(vehicleModel.CategoryId), "Category does not exist!");
             }
 
-            if (!this.data.EngineTypes.Any(et => et.Id == vehicleModel.EngineTypeId))
+            if (!this.vService.EngineTypeExists(vehicleModel.EngineTypeId))
             {
                 this.ModelState.AddModelError(nameof(vehicleModel.EngineTypeId), "Engine type does not exist!");
             }
 
             if (!ModelState.IsValid)
             {
-                vehicleModel.Categories = this.GetVehicleCategories();
-                vehicleModel.EngineTypes = this.GetEngineTypes();
+                vehicleModel.Categories = this.vService.GetVehicleCategories();
+                vehicleModel.EngineTypes = this.vService.GetEngineTypes();
 
                 return View(vehicleModel);
             }
 
-            var vehicle = new Vehicle
-            {
-                Make = vehicleModel.Make,
-                Model = vehicleModel.Model,
-                Year = vehicleModel.Year,
-                ImageURL = vehicleModel.ImageURL,
-                Description = vehicleModel.Description,
-                PricePerDay = vehicleModel.PricePerDay,
-                CategoryId = vehicleModel.CategoryId,
-                EngineTypeId = vehicleModel.EngineTypeId,
-                RenterId = renterId,
-                IsAvailable = true
-            };
-
-            this.data.Vehicles.Add(vehicle);
-            this.data.SaveChanges();
+            this.vService.CreateVehicle(vehicleModel.Make,
+                                        vehicleModel.Model,
+                                        vehicleModel.Year,
+                                        vehicleModel.ImageURL,
+                                        vehicleModel.Description,
+                                        vehicleModel.PricePerDay,
+                                        vehicleModel.CategoryId,
+                                        vehicleModel.EngineTypeId,
+                                        renterId);
 
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult List([FromQuery]SearchQueryModel query)
+        public IActionResult List([FromQuery]VehicleQueryServiceModel query)
         {
-            var vehicleQuery = this.data.Vehicles.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(query.Make))
-            {
-                vehicleQuery = vehicleQuery.Where(v => v.Make == query.Make);
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                vehicleQuery = vehicleQuery.Where(v => 
-                (v.Make + " " + v.Model).ToLower().Contains(query.SearchTerm.ToLower()));
-            }
-
-            vehicleQuery = query.Sorting switch
-            {
-                VehicleSorting.Year => vehicleQuery.OrderByDescending(v => v.Year),
-                VehicleSorting.MakeModels => vehicleQuery.OrderByDescending(v => v.Make).ThenBy(v => v.Model),
-                VehicleSorting.Created or _ => vehicleQuery.OrderByDescending(v => v.Id),
-            };
-
-            var vehicles = vehicleQuery
-                .Skip((query.CurrentPage - 1) * SearchQueryModel.VehiclesPerPage)
-                .Take(SearchQueryModel.VehiclesPerPage)
-                .Where(v => v.IsAvailable == true)
-                .Select(v => new ListingViewModel
-                {
-                    Id = v.Id,
-                    Make = v.Make,
-                    Model = v.Model,
-                    Year = v.Year,
-                    ImageURL = v.ImageURL
-                })
-                .ToList();
-
-            var makes = this.data
-                .Vehicles
-                .Select(v => v.Make)
-                .Distinct()
-                .ToList();
-
-            var totalCars = vehicleQuery.Count();
-
-            query.TotalCars = totalCars;
-            query.Makes = makes;
-            query.Vehicles = vehicles;
+            query = this.vService.List(query);
 
             return View(query);
         }
-
-        private IEnumerable<CreateCategoryModel> GetVehicleCategories()
-            => this.data
-                .Categories
-                .Select(c => new CreateCategoryModel
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToList();
-
-        private IEnumerable<CreateEngineTypeModel> GetEngineTypes()
-            => this.data
-                .EngineTypes
-                .Select(c => new CreateEngineTypeModel
-                {
-                    Id = c.Id,
-                    Type = c.Type
-                })
-                .ToList();
-
-        private bool UserIsRenter()
-            => this.data.Renters.Any(r => r.UserId == this.User.GetId());
     }   
 }

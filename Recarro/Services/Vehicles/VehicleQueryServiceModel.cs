@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Recarro.Models.Vehicles;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Recarro.Models.Vehicles
+namespace Recarro.Services.Vehicles
 {
-    public class SearchQueryModel
+    public class VehicleQueryServiceModel
     {
-        public const int VehiclesPerPage = 6;
+        public int VehiclesPerPage { get; set; } = 6;
 
         public int CurrentPage { get; set; } = 1;
 
@@ -20,6 +21,6 @@ namespace Recarro.Models.Vehicles
 
         public VehicleSorting Sorting { get; set; }
 
-        public IEnumerable<ListingViewModel> Vehicles { get; set; }
+        public IEnumerable<VehicleServiceModel> Vehicles { get; set; }
     }
 }

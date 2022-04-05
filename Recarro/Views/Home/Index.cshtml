@@ -37,9 +37,14 @@
 
 @if (Model.Vehicles.Any())
 {
+    @if (Model.VehiclesLeft < 0)
+    {
+        Model.VehiclesLeft = 0;
+    }
+
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-            <h1 class="display-4 text-center">Here are the last three added vehicles:</h1>
+            <h1 class="display-4 text-center">Here are the last added vehicles:</h1>
             <p class="lead text-center">(there are @Model.VehiclesLeft vehicles more, head out to Available Vehicles)</p>
         </div>
     </div>
@@ -69,6 +74,6 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-
-    <script src="~/js/site.js"></script>
 }
+
+<script src="~/js/site.js"></script>

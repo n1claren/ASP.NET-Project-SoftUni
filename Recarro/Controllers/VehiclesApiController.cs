@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Recarro.Data;
 using Recarro.Data.Models;
+using Recarro.Services.Vehicles;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,15 +10,15 @@ namespace Recarro.Controllers
     [Route("api/vehicles")]
     public class VehiclesApiController : ControllerBase
     {
-        private readonly RecarroDbContext data;
+        private readonly IVehicleService vService;
 
-        public VehiclesApiController(RecarroDbContext data)
-            => this.data = data;
+        public VehiclesApiController(IVehicleService vService) 
+            => this.vService = vService;
 
         [HttpGet]
         public ActionResult<List<Vehicle>> GetAllVehiclesData()
         {
-            var vehicles = this.data.Vehicles.ToList();
+            var vehicles = vService.GetAllVehicles();
 
             if (!vehicles.Any())
             {
@@ -32,7 +32,7 @@ namespace Recarro.Controllers
         [Route("{id}")]
         public ActionResult<Vehicle> GetVehicleData(int id)
         {
-            var vehicle = this.data.Vehicles.FirstOrDefault(x => x.Id == id);
+            var vehicle = vService.GetVehicleById(id);
 
             if (vehicle == null)
             {

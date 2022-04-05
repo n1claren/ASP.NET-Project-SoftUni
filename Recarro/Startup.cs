@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Recarro.Data;
 using Recarro.Infrastructure;
-using Recarro.Interfaces.Stats;
+using Recarro.Services.Stats;
+using Recarro.Services.Users;
+using Recarro.Services.Vehicles;
 
 namespace Recarro
 {
@@ -37,10 +40,15 @@ namespace Recarro
                 .AddEntityFrameworkStores<RecarroDbContext>();
 
             services
-                .AddControllersWithViews();
+                .AddControllersWithViews(options =>
+                {
+                    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                });
 
             services
-                .AddTransient<IStatsService, StatsService>();
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IStatsService, StatsService>()
+                .AddTransient<IVehicleService, VehicleService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

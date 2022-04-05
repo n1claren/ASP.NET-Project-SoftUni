@@ -1,4 +1,4 @@
-﻿@model SearchQueryModel
+﻿@model VehicleQueryServiceModel
 @{
     ViewData["Title"] = "Available Vehicles";
 }
@@ -46,7 +46,7 @@
         previousPage = 1;
     }
 
-    var lastPage = Math.Ceiling((double)Model.TotalCars / SearchQueryModel.VehiclesPerPage);
+    var lastPage = Math.Ceiling((double)Model.TotalCars / Model.VehiclesPerPage);
 }
 
 <div class="row">

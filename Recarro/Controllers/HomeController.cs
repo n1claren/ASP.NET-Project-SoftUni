@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Recarro.Data;
+using Recarro.Services.Vehicles;
 using Recarro.Models;
 using Recarro.Models.Home;
 using Recarro.Models.Vehicles;
@@ -10,29 +10,26 @@ namespace Recarro.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly RecarroDbContext data;
+        private readonly IVehicleService vService;
 
-        public HomeController(RecarroDbContext data)
-             => this.data = data;
+        public HomeController(IVehicleService vService) 
+            => this.vService = vService;
 
         public IActionResult Index()
         {
-            var vehicles = this.data
-                 .Vehicles
-                 .Where(v => v.IsAvailable == true)
-                 .OrderByDescending(v => v.Id)
-                 .Select(v => new ListingViewModel
-                 {
-                     Id = v.Id,
-                     Make = v.Make,
-                     Model = v.Model,
-                     Year = v.Year,
-                     ImageURL = v.ImageURL
-                 })
-                 .Take(3)
-                 .ToList();
+            var vehicles = vService
+                .LastThreeAddedVehicles()
+                .Select(v => new ListingViewModel
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year,
+                    ImageURL = v.ImageURL
+                })
+                .ToList();
 
-            var vehiclesLeft = this.data.Vehicles.Count() - 3;
+            var vehiclesLeft = vService.GetAllVehicles().Count() - 3;
 
             return View(new HomeViewModel
             {
