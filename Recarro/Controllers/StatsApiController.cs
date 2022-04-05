@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Recarro.Data;
-using Recarro.Models.Api;
-using System.Linq;
+using Recarro.Interfaces.Stats;
 
 namespace Recarro.Controllers
 {
@@ -9,22 +7,22 @@ namespace Recarro.Controllers
     [Route("api/stats")]
     public class StatsApiController : ControllerBase
     {
-        private readonly RecarroDbContext data;
+        private readonly StatsService stats;
 
-        public StatsApiController(RecarroDbContext data) 
-            => this.data = data;
+        public StatsApiController(StatsService stats) 
+            => this.stats = stats;
 
         [HttpGet]
-        public StatsResponseModel GetStats()
+        public StatsServiceModel GetStats()
         {
-            var stats = new StatsResponseModel
-            {
-                TotalVehicles = this.data.Vehicles.Count(),
-                TotalRents = 0, // table yet to be made
-                TotalUsers = this.data.Users.Count()
-            };
+            var statistics = stats.GetStats();
 
-            return stats;
+            return new StatsServiceModel
+            {
+                TotalVehicles = statistics.TotalVehicles,
+                TotalUsers = statistics.TotalUsers,
+                TotalRents = statistics.TotalRents
+            };
         }
     }
 }

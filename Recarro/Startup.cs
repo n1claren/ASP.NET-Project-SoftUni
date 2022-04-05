@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Recarro.Data;
 using Recarro.Infrastructure;
+using Recarro.Interfaces.Stats;
 
 namespace Recarro
 {
@@ -37,6 +38,9 @@ namespace Recarro
 
             services
                 .AddControllersWithViews();
+
+            services
+                .AddTransient<IStatsService, StatsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
