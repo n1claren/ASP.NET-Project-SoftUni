@@ -44,6 +44,38 @@ namespace Recarro.Services.Vehicles
             this.data.SaveChanges();
         }
 
+        public bool EditVehicle(int id,
+                                string make,
+                                string model,
+                                int year,
+                                string imageUrl,
+                                string description,
+                                decimal pricePerDay,
+                                int categoryId,
+                                int engineTypeId,
+                                int renterId)
+        {
+            var vehicle = this.data.Vehicles.Find(id);
+
+            if (vehicle.RenterId != renterId)
+            {
+                return false;
+            }
+
+            vehicle.Make = make;
+            vehicle.Model = model;
+            vehicle.Year = year;
+            vehicle.ImageURL = imageUrl;
+            vehicle.Description = description;
+            vehicle.PricePerDay = pricePerDay;
+            vehicle.CategoryId = categoryId;
+            vehicle.EngineTypeId = engineTypeId;
+
+            this.data.SaveChanges();
+
+            return true;
+        }
+
         public bool EngineTypeExists(int engineTypeId)
             => this.data.EngineTypes.Any(et => et.Id == engineTypeId);
 
@@ -139,6 +171,51 @@ namespace Recarro.Services.Vehicles
             query.Vehicles = vehicles;
 
             return query;
+        }
+
+        public VehicleServiceFullModel VehicleDetails(int id)
+            => this.data
+                .Vehicles
+                .Where(v => v.Id == id)
+                .Select(v => new VehicleServiceFullModel
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year,
+                    ImageURL = v.ImageURL,
+                    Description = v.Description,
+                    PricePerDay = v.PricePerDay,
+                    CategoryId = v.CategoryId,
+                    CategoryName = v.Category.Name,
+                    EngineTypeId = v.EngineTypeId,
+                    EngineTypeName = v.EngineType.Type,
+                    RenterId = v.RenterId
+                })
+                .FirstOrDefault();
+
+        public IEnumerable<VehicleServiceModel> VehiclesById(string id)
+        {
+            var renterId = this.data
+                .Renters
+                .Where(r => r.UserId == id)
+                .Select(r => r.Id)
+                .FirstOrDefault();
+
+            var vehicles = this.data
+                .Vehicles
+                .Where(v => v.RenterId == renterId)
+                .Select(v => new VehicleServiceModel
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year,
+                    ImageURL = v.ImageURL
+                })
+                .ToList();
+
+            return vehicles;
         }
     }
 }

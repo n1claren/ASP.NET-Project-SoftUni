@@ -37,6 +37,7 @@ namespace Recarro.Infrastructure
             {
                 new EngineType { Type = "Gasoline" },
                 new EngineType { Type = "Diesel" },
+                new EngineType { Type = "Hybrid" },
                 new EngineType { Type = "Electric" }
             });
         }

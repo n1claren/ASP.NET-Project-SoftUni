@@ -30,6 +30,21 @@ namespace Recarro.Services.Vehicles
                                   int engineTypeId,
                                   int renterId);
 
+        public bool EditVehicle(int id,
+                                  string make,
+                                  string model,
+                                  int year,
+                                  string imageUrl,
+                                  string description,
+                                  decimal pricePerDay,
+                                  int categoryId,
+                                  int engineTypeId,
+                                  int renterId);
+
         public VehicleQueryServiceModel List(VehicleQueryServiceModel query);
+
+        public IEnumerable<VehicleServiceModel> VehiclesById(string id);
+
+        public VehicleServiceFullModel VehicleDetails(int id);
     }
 }

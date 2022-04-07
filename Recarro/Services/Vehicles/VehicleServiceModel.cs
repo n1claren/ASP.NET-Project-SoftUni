@@ -2,14 +2,14 @@
 {
     public class VehicleServiceModel
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
-        public string Make { get; set; }
+        public string Make { get; init; }
 
-        public string Model { get; set; }
+        public string Model { get; init; }
 
-        public int Year { get; set; }
+        public int Year { get; init; }
 
-        public string ImageURL { get; set; }
+        public string ImageURL { get; init; }
     }
 }
