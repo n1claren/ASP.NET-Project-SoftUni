@@ -109,7 +109,12 @@ namespace Recarro.Controllers
             var renterId = uService.GetRenterId(userId);
             var vehicle = this.vService.VehicleDetails(id);
 
-            if (renterId == 0 || vehicle.RenterId != renterId)
+            if (renterId == 0 && !User.isAdmin())
+            {
+                return Unauthorized();
+            }
+
+            if (vehicle.RenterId != renterId && !User.isAdmin())
             {
                 return Unauthorized();
             }
@@ -136,9 +141,9 @@ namespace Recarro.Controllers
             var userId = this.User.GetId();
             var renterId = uService.GetRenterId(userId);
 
-            if (renterId == 0)
+            if (renterId == 0 && !User.isAdmin())
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
             if (!this.vService.CategoryExists(vehicleModel.CategoryId))

@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Recarro.Data;
 using Recarro.Data.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+
+using static Recarro.WebConstants;
 
 namespace Recarro.Infrastructure
 {
@@ -13,13 +17,15 @@ namespace Recarro.Infrastructure
         public static IApplicationBuilder MigrateDatabase(this IApplicationBuilder app)
         {
             using var scope = app.ApplicationServices.CreateScope();
+            var provider = scope.ServiceProvider;
 
-            var data = scope.ServiceProvider.GetService<RecarroDbContext>();
+            var data = scope.ServiceProvider.GetRequiredService<RecarroDbContext>();
 
             data.Database.Migrate();
 
             SeedCategories(data);
             SeedEngineTypes(data);
+            SeedAdministrator(provider);
 
             data.SaveChanges();
 
@@ -64,6 +70,37 @@ namespace Recarro.Infrastructure
                 new Category { Name = "Muscle" },
                 new Category { Name = "Cabriolet" }
             });
+        }
+
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task.Run(async () =>
+            {
+                if (await roleManager.RoleExistsAsync(AdministratorRoleName))
+                {
+                    return;
+                }
+
+                await roleManager.CreateAsync(new IdentityRole
+                {
+                    Name = AdministratorRoleName
+                });
+
+                var user = new IdentityUser
+                {
+                    Email = AdminEmail,
+                    UserName = AdminUsername
+                };
+
+                await userManager.CreateAsync(user, AdminPassword);
+
+                await userManager.AddToRoleAsync(user, AdministratorRoleName);
+            })
+            .GetAwaiter()
+            .GetResult();
         }
     }
 }

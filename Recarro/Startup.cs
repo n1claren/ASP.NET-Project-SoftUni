@@ -37,6 +37,7 @@ namespace Recarro
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<RecarroDbContext>();
 
             services

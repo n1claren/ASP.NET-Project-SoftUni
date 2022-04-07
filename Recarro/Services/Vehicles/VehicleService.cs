@@ -57,7 +57,7 @@ namespace Recarro.Services.Vehicles
         {
             var vehicle = this.data.Vehicles.Find(id);
 
-            if (vehicle.RenterId != renterId)
+            if (vehicle == null) // || vehicle.RenterId != renterId
             {
                 return false;
             }
