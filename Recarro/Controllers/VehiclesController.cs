@@ -97,7 +97,7 @@ namespace Recarro.Controllers
                 return BadRequest();
             }
 
-            var vehicles = vService.VehiclesById(userId);
+            var vehicles = vService.VehiclesByUserId(userId);
 
             return View(vehicles);
         }
@@ -176,6 +176,35 @@ namespace Recarro.Controllers
                                       renterId);
 
             if (!edited)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var userId = User.GetId();
+            var userIsAdmin = User.isAdmin();
+            var vehicle = vService.VehicleDetails(id);
+            var renterId = uService.GetRenterId(userId);
+
+            if (renterId == 0 && !userIsAdmin)
+            {
+                return BadRequest();
+            }
+
+            return View(vehicle);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Delete(VehicleServiceFullModel vehicle)
+        {
+            var deleted = this.vService.DeleteVehicle(vehicle.Id);
+
+            if (!deleted)
             {
                 return BadRequest();
             }

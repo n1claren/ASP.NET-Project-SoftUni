@@ -43,8 +43,12 @@ namespace Recarro.Services.Vehicles
 
         public VehicleQueryServiceModel List(VehicleQueryServiceModel query);
 
-        public IEnumerable<VehicleServiceModel> VehiclesById(string id);
+        public IEnumerable<VehicleServiceModel> VehiclesByUserId(string id);
 
         public VehicleServiceFullModel VehicleDetails(int id);
+
+        public IEnumerable<VehicleServiceFullModel> MapList();
+
+        public bool DeleteVehicle(int id);
     }
 }

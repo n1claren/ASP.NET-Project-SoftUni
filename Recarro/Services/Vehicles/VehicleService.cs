@@ -10,20 +10,20 @@ namespace Recarro.Services.Vehicles
     {
         private readonly RecarroDbContext data;
 
-        public VehicleService(RecarroDbContext data) 
+        public VehicleService(RecarroDbContext data)
             => this.data = data;
 
         public bool CategoryExists(int categoryId)
             => this.data.Categories.Any(c => c.Id == categoryId);
 
-        public void CreateVehicle(string make, 
-                                  string model, 
-                                  int year, 
-                                  string imageUrl, 
-                                  string description, 
-                                  decimal pricePerDay,  
-                                  int categoryId, 
-                                  int engineTypeId, 
+        public void CreateVehicle(string make,
+                                  string model,
+                                  int year,
+                                  string imageUrl,
+                                  string description,
+                                  decimal pricePerDay,
+                                  int categoryId,
+                                  int engineTypeId,
                                   int renterId)
         {
             var vehicle = new Vehicle
@@ -194,7 +194,27 @@ namespace Recarro.Services.Vehicles
                 })
                 .FirstOrDefault();
 
-        public IEnumerable<VehicleServiceModel> VehiclesById(string id)
+        public IEnumerable<VehicleServiceFullModel> MapList()
+            => this.data
+                .Vehicles
+                .Select(v => new VehicleServiceFullModel
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year,
+                    ImageURL = v.ImageURL,
+                    Description = v.Description,
+                    PricePerDay = v.PricePerDay,
+                    CategoryId = v.CategoryId,
+                    CategoryName = v.Category.Name,
+                    EngineTypeId = v.EngineTypeId,
+                    EngineTypeName = v.EngineType.Type,
+                    RenterId = v.RenterId
+                })
+                .ToList();
+
+        public IEnumerable<VehicleServiceModel> VehiclesByUserId(string id)
         {
             var renterId = this.data
                 .Renters
@@ -216,6 +236,21 @@ namespace Recarro.Services.Vehicles
                 .ToList();
 
             return vehicles;
+        }
+
+        public bool DeleteVehicle(int id)
+        {
+            var vehicle = this.data.Vehicles.Where(v => v.Id == id).FirstOrDefault();
+
+            if (vehicle == null)
+            {
+                return false;
+            }
+
+            this.data.Vehicles.Remove(vehicle);
+            this.data.SaveChanges();
+
+            return true;
         }
     }
 }

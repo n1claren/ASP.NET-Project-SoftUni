@@ -3,6 +3,18 @@
     ViewData["Title"] = "Available Vehicles";
 }
 
+@if (!Model.Vehicles.Any())
+{
+    <div class="jumbotron">
+        <h1 class="display-4">Nothing to display!</h1>
+        <p class="lead">There are no vehicles available at the moment, so maybe add one? =)</p>
+        <hr class="my-4">
+        <p class="lead">
+            <a asp-controller="Vehicles" asp-action="Create" class="btn btn-primary btn-lg" role="button">Add a Vehicle</a>
+        </p>
+    </div>
+}
+
 <form method="get">
     <div class="row">
         <div class="form-group col-md-4">

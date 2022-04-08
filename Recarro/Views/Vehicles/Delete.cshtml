@@ -1,0 +1,27 @@
+﻿@model VehicleServiceFullModel
+
+<div class="text-center">
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete this entry?
+    </div>
+
+    <div class="card">
+        <img class="card-img-top" src="@Model.ImageURL">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Make @Model.Model</h5>
+            <p class="card-text">@Model.Description</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Year: @Model.Year</li>
+            <li class="list-group-item">Daily Price: @Model.PricePerDay</li>
+            <li class="list-group-item">Category: @Model.CategoryName</li>
+            <li class="list-group-item">Engine Type: @Model.EngineTypeName</li>
+        </ul>
+        <div class="card-body">
+            <form method="post">
+                <input class="btn btn-danger" type="submit" value="Delete" />
+            </form>
+        </div>
+    </div>
+</div>
+
