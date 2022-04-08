@@ -80,6 +80,7 @@ namespace Recarro
 
                .UseEndpoints(endpoints =>
                {
+                   endpoints.MapDefaultAreaRoute();
                    endpoints.MapDefaultControllerRoute();
                    endpoints.MapRazorPages();
                });
