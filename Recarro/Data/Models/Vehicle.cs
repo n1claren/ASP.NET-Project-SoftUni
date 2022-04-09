@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 using static Recarro.Data.DataConstants;
 
@@ -6,6 +7,11 @@ namespace Recarro.Data.Models
 {
     public class Vehicle
     {
+        public Vehicle()
+        {
+            this.Rents = new List<Rent>();
+        }
+
         [Key]
         public int Id { get; init; }
 
@@ -42,5 +48,7 @@ namespace Recarro.Data.Models
         public int RenterId { get; set; }
 
         public Renter Renter { get; init; }
+
+        public IEnumerable<Rent> Rents { get; init; }
     }
 }

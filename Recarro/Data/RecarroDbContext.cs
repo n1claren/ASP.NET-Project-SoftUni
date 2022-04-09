@@ -39,7 +39,7 @@ namespace Recarro.Data
             builder
                 .Entity<Vehicle>()
                 .Property(p => p.PricePerDay)
-                .HasColumnType("decimal(18,3)");
+                .HasColumnType("decimal(18,4)");
 
             builder
                 .Entity<Vehicle>()
@@ -54,6 +54,25 @@ namespace Recarro.Data
                 .WithOne()
                 .HasForeignKey<Renter>(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Rent>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Rent>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Rent>()
+                .HasOne<Vehicle>()
+                .WithMany(v => v.Rents)
+                .HasForeignKey(r => r.VehicleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Rent>()
+                .Property(r => r.Bill)
+                .HasColumnType("decimal(18,4)");
 
             base.OnModelCreating(builder);
         }
