@@ -1,0 +1,25 @@
+﻿@model VehicleServiceFullModel
+
+<div class="text-center">
+    <div class="alert alert-info" role="alert">
+        Is this your car for the day? =)
+    </div>
+
+    <div class="card">
+        <img class="card-img-top" src="@Model.ImageURL">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Year @Model.Make @Model.Model</h5>
+            <p class="card-text">@Model.Description</p>
+        </div>
+        <ul class="list-group list-group-flush">
+
+            <li class="list-group-item">Daily Price: @Model.PricePerDay.ToString("F2")$</li>
+            <li class="list-group-item">Category: @Model.CategoryName</li>
+            <li class="list-group-item">Engine Type: @Model.EngineTypeName</li>
+            <li class="list-group-item">Rented out by: @Model.RenterName</li>
+        </ul>
+        <div class="card-body">
+            <a class="nav-link font-weight-bold text-primary" asp-controller="Vehicles" asp-action="Rent" asp-route-id="@Model.Id">Rent this Vehicle</a>
+        </div>
+    </div>
+</div>

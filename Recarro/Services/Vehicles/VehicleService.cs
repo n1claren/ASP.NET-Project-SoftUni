@@ -190,7 +190,8 @@ namespace Recarro.Services.Vehicles
                     CategoryName = v.Category.Name,
                     EngineTypeId = v.EngineTypeId,
                     EngineTypeName = v.EngineType.Type,
-                    RenterId = v.RenterId
+                    RenterId = v.RenterId,
+                    RenterName = v.Renter.Name
                 })
                 .FirstOrDefault();
 

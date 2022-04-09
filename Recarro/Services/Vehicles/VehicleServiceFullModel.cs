@@ -15,5 +15,7 @@
         public string EngineTypeName { get; init; }
 
         public int RenterId { get; init; }
+
+        public string RenterName { get; init; }
     }
 }

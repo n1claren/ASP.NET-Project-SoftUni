@@ -131,7 +131,7 @@ namespace Recarro.Controllers
                 EngineTypeId = vehicle.EngineTypeId,
                 Categories = this.vService.GetVehicleCategories(),
                 EngineTypes = this.vService.GetEngineTypes()
-            });    
+            });
         }
 
         [Authorize]
@@ -209,6 +209,29 @@ namespace Recarro.Controllers
                 return BadRequest();
             }
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult Details(int id)
+        {
+            var vehicle = vService.VehicleDetails(id);
+
+            return View(vehicle);
+        }
+
+        // to be continued
+
+        [Authorize]
+        public IActionResult Rent(int id)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Rent()
+        {
             return RedirectToAction("Index", "Home");
         }
     }
