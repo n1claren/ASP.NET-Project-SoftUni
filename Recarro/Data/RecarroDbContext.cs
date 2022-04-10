@@ -20,6 +20,8 @@ namespace Recarro.Data
 
         public DbSet<Renter> Renters { get; init; }
 
+        public DbSet<Rent> Rents { get; init; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder
@@ -53,13 +55,6 @@ namespace Recarro.Data
                 .HasOne<IdentityUser>()
                 .WithOne()
                 .HasForeignKey<Renter>(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder
-                .Entity<Rent>()
-                .HasOne<IdentityUser>()
-                .WithOne()
-                .HasForeignKey<Rent>(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder

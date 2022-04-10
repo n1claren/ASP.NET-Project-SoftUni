@@ -1,5 +1,6 @@
 ﻿using Recarro.Data.Models;
 using Recarro.Models.Vehicles;
+using System;
 using System.Collections.Generic;
 
 namespace Recarro.Services.Vehicles
@@ -50,5 +51,9 @@ namespace Recarro.Services.Vehicles
         public IEnumerable<VehicleServiceFullModel> MapList();
 
         public bool DeleteVehicle(int id);
+
+        public void RentVehicle(DateTime startDate, DateTime endDate, string userId, int vehicleId);
+
+        public void FreeVehicle(int id);
     }
 }

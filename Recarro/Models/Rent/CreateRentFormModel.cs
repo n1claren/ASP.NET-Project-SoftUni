@@ -1,18 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Recarro.Data.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Recarro.Data.Models
+namespace Recarro.Models.Rent
 {
-    public class Rent
+    public class CreateRentFormModel
     {
-        [Key]
-        public int Id { get; init; }
-
         [Required]
+        [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; init; }
 
         [Required]
+        [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; init; }
 
         [Required]
@@ -24,7 +28,5 @@ namespace Recarro.Data.Models
         public string UserId { get; init; }
 
         public IdentityUser User { get; init; }
-
-        public decimal Bill { get; init; }
     }
 }

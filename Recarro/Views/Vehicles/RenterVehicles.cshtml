@@ -1,13 +1,31 @@
-﻿@model IEnumerable<VehicleServiceModel>
+﻿@model IEnumerable<VehicleServiceFullModel>
 
 @{
     ViewData["Title"] = "Your listed vehicles.";
-    ViewBag.AllowEditDelete = true;
 }
 
-@if (!Model.Any()) 
+@if (!Model.Any())
 {
     <h2 class="text-center">You do not have any vehicles listed!</h2>
 }
 
-<partial name="_VisualisationPartial" model="@Model" />
+<div class="row">
+    @foreach (var vehicle in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@vehicle.ImageURL" alt="@vehicle.Year @vehicle.Make @vehicle.Model">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                    <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary">Details</a>
+                    <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Vehicles" asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger">Delete</a>
+                    @if (!vehicle.IsAvailabe)
+                    {
+                        <a asp-area="" asp-controller="Vehicles" asp-action="Free" asp-route-id="@vehicle.Id" class="btn btn-success float-right ml-3">Free</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

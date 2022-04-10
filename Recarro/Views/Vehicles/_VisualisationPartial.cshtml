@@ -9,11 +9,9 @@
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
                     <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary">Details</a>
-                    @if (ViewBag.AllowEditDelete = true || User.isAdmin())
-                    {
-                        <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning">Edit</a>
-                        <a asp-controller="Vehicles" asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger">Delete</a>
-                    }
+                    <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Vehicles" asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger">Delete</a>
+
                 </div>
             </div>
         </div>

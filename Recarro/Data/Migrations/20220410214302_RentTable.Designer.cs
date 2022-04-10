@@ -10,7 +10,7 @@ using Recarro.Data;
 namespace Recarro.Data.Migrations
 {
     [DbContext(typeof(RecarroDbContext))]
-    [Migration("20220409212628_RentTable")]
+    [Migration("20220410214302_RentTable")]
     partial class RentTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -293,7 +293,7 @@ namespace Recarro.Data.Migrations
 
                     b.HasIndex("VehicleId1");
 
-                    b.ToTable("Rent");
+                    b.ToTable("Rents");
                 });
 
             modelBuilder.Entity("Recarro.Data.Models.Renter", b =>

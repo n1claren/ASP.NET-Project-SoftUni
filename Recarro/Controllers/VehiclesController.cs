@@ -4,6 +4,8 @@ using Recarro.Infrastructure;
 using Recarro.Services.Vehicles;
 using Recarro.Models.Vehicles;
 using Recarro.Services.Users;
+using Recarro.Models.Rent;
+using System;
 
 namespace Recarro.Controllers
 {
@@ -220,19 +222,58 @@ namespace Recarro.Controllers
             return View(vehicle);
         }
 
-        // to be continued
-
         [Authorize]
         public IActionResult Rent(int id)
         {
+            ViewBag.VehicleId = id;
+
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Rent()
+        public IActionResult Rent(CreateRentFormModel rent)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(rent);
+            }
+
+            if ((rent.EndDate - rent.StartDate).TotalDays < 0)
+            {
+                return View(rent);
+            }
+
+            this.vService.RentVehicle(rent.StartDate, rent.EndDate, rent.UserId, rent.VehicleId);
+
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult Free(int id)
+        {
+            var userId = this.User.GetId();
+            var renterId = this.uService.GetRenterId(userId);
+            var userIsAdmin = this.User.isAdmin();
+
+            if (!userIsAdmin)
+            {
+                if (!this.uService.VehicleBelongsToRenter(renterId, id))
+                {
+                    return Unauthorized();
+                }
+            }
+
+            this.vService.FreeVehicle(id);
+
+            if (userIsAdmin)
+            {
+                return RedirectToAction("List", "Vehicles", new { area = "Admin" });
+            }
+            else
+            {
+                return RedirectToAction("RenterVehicles", "Vehicles");
+            }
         }
     }
 }

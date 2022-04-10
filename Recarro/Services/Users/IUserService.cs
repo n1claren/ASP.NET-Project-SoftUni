@@ -5,5 +5,7 @@
         public bool UserIsRenter(string userId);
 
         public int GetRenterId(string userId);
+
+        public bool VehicleBelongsToRenter(int renterId, int vehicleId);
     }
 }

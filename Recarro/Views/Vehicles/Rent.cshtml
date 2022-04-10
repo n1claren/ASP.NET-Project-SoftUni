@@ -1,0 +1,33 @@
+﻿@model CreateRentFormModel
+
+<div class="container">
+    <div class="row">
+        <div class="offset-md-3 col-md-6 col-sm-12">
+            <h2 class="heading-margin text-center">Rent A Vehicle</h2>
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="StartDate"></label>
+                    <input asp-for="StartDate" class="form-control">
+                    <span asp-validation-for="StartDate" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate"></label>
+                    <input asp-for="EndDate" class="form-control">
+                    <span asp-validation-for="EndDate" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VehicleId"></label>
+                    <input asp-for="VehicleId" class="form-control" value="@ViewBag.VehicleId" readonly="true">
+                    <span asp-validation-for="VehicleId" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserId"></label>
+                    <input asp-for="UserId" class="form-control" value="@User.GetId()" readonly="true">
+                    <span asp-validation-for="UserId" class="small text-danger"></span>
+                </div>
+                
+                <input class="btn btn-primary float-right" type="submit" value="Rent" />
+            </form>
+        </div>
+    </div>
+</div>

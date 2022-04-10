@@ -17,5 +17,7 @@
         public int RenterId { get; init; }
 
         public string RenterName { get; init; }
+
+        public bool IsAvailabe { get; set; }
     }
 }

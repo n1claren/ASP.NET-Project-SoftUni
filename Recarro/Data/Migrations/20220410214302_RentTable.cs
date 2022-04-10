@@ -16,7 +16,7 @@ namespace Recarro.Data.Migrations
                 oldType: "decimal(18,3)");
 
             migrationBuilder.CreateTable(
-                name: "Rent",
+                name: "Rents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -31,27 +31,27 @@ namespace Recarro.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rent", x => x.Id);
+                    table.PrimaryKey("PK_Rents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rent_AspNetUsers_UserId",
+                        name: "FK_Rents_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Rent_AspNetUsers_UserId1",
+                        name: "FK_Rents_AspNetUsers_UserId1",
                         column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Rent_Vehicles_VehicleId",
+                        name: "FK_Rents_Vehicles_VehicleId",
                         column: x => x.VehicleId,
                         principalTable: "Vehicles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Rent_Vehicles_VehicleId1",
+                        name: "FK_Rents_Vehicles_VehicleId1",
                         column: x => x.VehicleId1,
                         principalTable: "Vehicles",
                         principalColumn: "Id",
@@ -59,31 +59,31 @@ namespace Recarro.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rent_UserId",
-                table: "Rent",
+                name: "IX_Rents_UserId",
+                table: "Rents",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rent_UserId1",
-                table: "Rent",
+                name: "IX_Rents_UserId1",
+                table: "Rents",
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rent_VehicleId",
-                table: "Rent",
+                name: "IX_Rents_VehicleId",
+                table: "Rents",
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rent_VehicleId1",
-                table: "Rent",
+                name: "IX_Rents_VehicleId1",
+                table: "Rents",
                 column: "VehicleId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Rent");
+                name: "Rents");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "PricePerDay",

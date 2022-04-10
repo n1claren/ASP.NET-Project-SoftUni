@@ -14,7 +14,7 @@ namespace Recarro.Services.Stats
         {
             var totalVehicles = this.data.Vehicles.Count();
             var totalUsers = this.data.Users.Count();
-            var totalRents = 0; // table to be made
+            var totalRents = this.data.Rents.Count();
 
             return new StatsServiceModel
             {

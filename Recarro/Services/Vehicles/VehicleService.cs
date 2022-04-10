@@ -1,6 +1,7 @@
 ﻿using Recarro.Data;
 using Recarro.Data.Models;
 using Recarro.Models.Vehicles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -211,7 +212,8 @@ namespace Recarro.Services.Vehicles
                     CategoryName = v.Category.Name,
                     EngineTypeId = v.EngineTypeId,
                     EngineTypeName = v.EngineType.Type,
-                    RenterId = v.RenterId
+                    RenterId = v.RenterId,
+                    IsAvailabe = v.IsAvailable
                 })
                 .ToList();
 
@@ -226,13 +228,14 @@ namespace Recarro.Services.Vehicles
             var vehicles = this.data
                 .Vehicles
                 .Where(v => v.RenterId == renterId)
-                .Select(v => new VehicleServiceModel
+                .Select(v => new VehicleServiceFullModel
                 {
                     Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
                     Year = v.Year,
-                    ImageURL = v.ImageURL
+                    ImageURL = v.ImageURL,
+                    IsAvailabe = v.IsAvailable
                 })
                 .ToList();
 
@@ -252,6 +255,41 @@ namespace Recarro.Services.Vehicles
             this.data.SaveChanges();
 
             return true;
+        }
+
+        public void RentVehicle(DateTime startDate, DateTime endDate, string userId, int vehicleId)
+        {
+            var vehicle = this.data.Vehicles.Where(v => v.Id == vehicleId).FirstOrDefault();
+            var user = this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
+
+            var bill = (decimal)(endDate - startDate).TotalDays * vehicle.PricePerDay;
+
+            var rent = new Rent
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                UserId = userId,
+                VehicleId = vehicleId,
+                Vehicle = vehicle,
+                User = user,
+                Bill = bill
+            };
+
+            this.data.Vehicles.Where(v => v.Id == vehicleId).First().IsAvailable = false;
+
+            this.data.Rents.Add(rent);
+            this.data.SaveChanges();
+        }
+
+        public void FreeVehicle(int id)
+        {
+            this.data
+                .Vehicles
+                .Where(v => v.Id == id)
+                .FirstOrDefault()
+                .IsAvailable = true;
+
+            this.data.SaveChanges();
         }
     }
 }
