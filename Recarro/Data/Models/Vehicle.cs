@@ -33,22 +33,22 @@ namespace Recarro.Data.Models
         [Required]
         public decimal PricePerDay { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public string CurrentUser { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
 
-        public Category Category { get; init; }
+        public Category Category { get; set; }
 
         [Required]
         public int EngineTypeId { get; set; }
 
-        public EngineType EngineType { get; init; }
+        public EngineType EngineType { get; set; }
 
         public int RenterId { get; set; }
 
-        public Renter Renter { get; init; }
+        public Renter Renter { get; set; }
 
-        public IEnumerable<Rent> Rents { get; init; }
+        public IEnumerable<Rent> Rents { get; set; }
     }
 }

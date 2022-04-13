@@ -1,4 +1,6 @@
-﻿namespace Recarro.Services.Users
+﻿using System.Collections.Generic;
+
+namespace Recarro.Services.Users
 {
     public interface IUserService
     {
@@ -6,6 +8,8 @@
 
         public int GetRenterId(string userId);
 
-        public bool VehicleBelongsToRenter(int renterId, int vehicleId);
+        public bool VehicleRentedByOrTo(string userId, int renterId, int vehicleId);
+
+        public IEnumerable<UserRentedVehiclesModel> UserRents(string userId);
     }
 }

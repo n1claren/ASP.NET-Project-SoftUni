@@ -21,7 +21,7 @@
     <tbody>
         @foreach (var vehicle in Model)
         {
-            @if (vehicle.IsAvailabe)
+            @if (vehicle.CurrentUser == null)
             {
                 <tr>
                     <td scope="col">@vehicle.Id</td>
@@ -58,7 +58,7 @@
     <tbody>
         @foreach (var vehicle in Model)
         {
-            @if (!vehicle.IsAvailabe)
+            @if (vehicle.CurrentUser != null)
             {
                 <tr>
                     <td scope="col">@vehicle.Id</td>

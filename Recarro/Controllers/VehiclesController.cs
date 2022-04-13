@@ -255,10 +255,11 @@ namespace Recarro.Controllers
             var userId = this.User.GetId();
             var renterId = this.uService.GetRenterId(userId);
             var userIsAdmin = this.User.isAdmin();
+            var userIsRenter = this.uService.UserIsRenter(userId);
 
             if (!userIsAdmin)
             {
-                if (!this.uService.VehicleBelongsToRenter(renterId, id))
+                if (!this.uService.VehicleRentedByOrTo(userId, renterId, id))
                 {
                     return Unauthorized();
                 }
@@ -270,10 +271,24 @@ namespace Recarro.Controllers
             {
                 return RedirectToAction("List", "Vehicles", new { area = "Admin" });
             }
-            else
+            else if (userIsRenter)
             {
                 return RedirectToAction("RenterVehicles", "Vehicles");
             }
+            else
+            {
+                return RedirectToAction("Rents", "Vehicles");
+            }
+        }
+
+        public IActionResult Rents()
+        {
+            var userId = this.User.GetId();
+            ViewBag.UserId = userId;
+
+            var rentsByUser = this.uService.UserRents(userId);
+
+            return View(rentsByUser);
         }
     }
 }

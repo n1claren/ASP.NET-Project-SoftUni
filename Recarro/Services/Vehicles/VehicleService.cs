@@ -35,7 +35,7 @@ namespace Recarro.Services.Vehicles
                 ImageURL = imageUrl,
                 Description = description,
                 PricePerDay = pricePerDay,
-                IsAvailable = true,
+                CurrentUser = null,
                 CategoryId = categoryId,
                 EngineTypeId = engineTypeId,
                 RenterId = renterId
@@ -109,7 +109,7 @@ namespace Recarro.Services.Vehicles
         public IEnumerable<VehicleServiceModel> LastThreeAddedVehicles()
             => this.data
                  .Vehicles
-                 .Where(v => v.IsAvailable == true)
+                 .Where(v => v.CurrentUser == null)
                  .OrderByDescending(v => v.Id)
                  .Select(v => new VehicleServiceModel
                  {
@@ -147,7 +147,7 @@ namespace Recarro.Services.Vehicles
             var vehicles = vehicleQuery
                 .Skip((query.CurrentPage - 1) * query.VehiclesPerPage)
                 .Take(query.VehiclesPerPage)
-                .Where(v => v.IsAvailable == true)
+                .Where(v => v.CurrentUser == null)
                 .Select(v => new VehicleServiceModel
                 {
                     Id = v.Id,
@@ -213,7 +213,7 @@ namespace Recarro.Services.Vehicles
                     EngineTypeId = v.EngineTypeId,
                     EngineTypeName = v.EngineType.Type,
                     RenterId = v.RenterId,
-                    IsAvailabe = v.IsAvailable
+                    CurrentUser = v.CurrentUser
                 })
                 .ToList();
 
@@ -235,7 +235,7 @@ namespace Recarro.Services.Vehicles
                     Model = v.Model,
                     Year = v.Year,
                     ImageURL = v.ImageURL,
-                    IsAvailabe = v.IsAvailable
+                    CurrentUser = v.CurrentUser
                 })
                 .ToList();
 
@@ -275,7 +275,7 @@ namespace Recarro.Services.Vehicles
                 Bill = bill
             };
 
-            this.data.Vehicles.Where(v => v.Id == vehicleId).First().IsAvailable = false;
+            vehicle.CurrentUser = userId;
 
             this.data.Rents.Add(rent);
             this.data.SaveChanges();
@@ -287,7 +287,7 @@ namespace Recarro.Services.Vehicles
                 .Vehicles
                 .Where(v => v.Id == id)
                 .FirstOrDefault()
-                .IsAvailable = true;
+                .CurrentUser = null;
 
             this.data.SaveChanges();
         }

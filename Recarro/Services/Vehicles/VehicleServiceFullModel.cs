@@ -18,6 +18,6 @@
 
         public string RenterName { get; init; }
 
-        public bool IsAvailabe { get; set; }
+        public string CurrentUser { get; set; }
     }
 }

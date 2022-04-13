@@ -20,7 +20,7 @@
                     <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary">Details</a>
                     <a asp-controller="Vehicles" asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning">Edit</a>
                     <a asp-controller="Vehicles" asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger">Delete</a>
-                    @if (!vehicle.IsAvailabe)
+                    @if (vehicle.CurrentUser != null)
                     {
                         <a asp-area="" asp-controller="Vehicles" asp-action="Free" asp-route-id="@vehicle.Id" class="btn btn-success float-right ml-3">Free</a>
                     }
