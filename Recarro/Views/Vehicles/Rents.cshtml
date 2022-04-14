@@ -13,6 +13,7 @@
             <th scope="col">Year</th>
             <th scope="col">Rented From</th>
             <th scope="col">Rented Until</th>
+            <th scope="col">Bill</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -26,6 +27,7 @@
                     <td scope="col">@vehicle.Year</td>
                     <td scope="col">@vehicle.RentedFrom.ToString("dd/MMM/yyyy")</td>
                     <td scope="col">@vehicle.RentedUntil.ToString("dd/MMM/yyyy")</td>
+                    <td scope="col">@vehicle.Bill.ToString("F2")$</td>
                     <td scope="col">
                         <a asp-area="" asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary float-right ml-3">Details</a>
                     @if (vehicle.CurrentUser == ViewBag.userId)

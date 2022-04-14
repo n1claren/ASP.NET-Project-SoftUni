@@ -53,7 +53,8 @@ namespace Recarro.Services.Users
                     Year = r.Vehicle.Year,
                     RentedFrom = r.StartDate,
                     RentedUntil = r.EndDate,
-                    CurrentUser = r.Vehicle.CurrentUser
+                    CurrentUser = r.Vehicle.CurrentUser,
+                    Bill = r.Bill
                 })
                 .ToList();
     }

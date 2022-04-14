@@ -17,6 +17,8 @@ namespace Recarro.Services.Users
 
         public DateTime RentedUntil { get; set; }
 
+        public decimal Bill { get; set; }
+
         public string CurrentUser { get; set; } 
     }
 }
