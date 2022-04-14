@@ -234,6 +234,8 @@ namespace Recarro.Controllers
         [HttpPost]
         public IActionResult Rent(CreateRentFormModel rent)
         {
+            ViewBag.VehicleId = rent.VehicleId;
+
             if (!ModelState.IsValid)
             {
                 return View(rent);

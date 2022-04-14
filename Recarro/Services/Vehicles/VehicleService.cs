@@ -263,6 +263,11 @@ namespace Recarro.Services.Vehicles
 
             var bill = (decimal)(endDate - startDate).TotalDays * vehicle.PricePerDay;
 
+            if (bill == 0)
+            {
+                bill = vehicle.PricePerDay;
+            }
+
             var rent = new Rent
             {
                 StartDate = startDate,
