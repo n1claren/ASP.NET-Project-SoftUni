@@ -55,5 +55,7 @@ namespace Recarro.Services.Vehicles
         public void RentVehicle(DateTime startDate, DateTime endDate, string userId, int vehicleId);
 
         public void FreeVehicle(int id);
+
+        public IEnumerable<VehicleServiceModel> RentedVehicles();
     }
 }

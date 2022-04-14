@@ -290,5 +290,12 @@ namespace Recarro.Controllers
 
             return View(rentsByUser);
         }
+
+        public IActionResult Rented()
+        {
+            var vehicles = this.vService.RentedVehicles();
+
+            return View(vehicles);
+        }
     }
 }

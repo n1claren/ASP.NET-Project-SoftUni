@@ -1,0 +1,32 @@
+﻿@model IEnumerable<VehicleServiceModel>
+
+@{
+    ViewData["Title"] = "Rented Vehicles";
+}
+
+@if (!Model.Any())
+{
+    <div class="jumbotron">
+        <h1 class="display-4">Nothing to display!</h1>
+        <p class="lead">There aren't any vehicles being rented at the moment.</p>
+        <hr class="my-4">
+        <p class="lead">
+            <a asp-controller="Vehicles" asp-action="List" class="btn btn-primary btn-lg" role="button">Available Vehicles</a>
+        </p>
+    </div>
+}
+
+<div class="row">
+    @foreach (var vehicle in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@vehicle.ImageURL" alt="@vehicle.Year @vehicle.Make @vehicle.Model">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                    <h5 class="card-title text-center">Rented Until: @vehicle.RentedUntil</h5>
+                </div>
+            </div>
+        </div>
+    }
+</div>

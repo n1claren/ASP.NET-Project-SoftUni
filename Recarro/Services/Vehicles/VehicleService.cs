@@ -166,7 +166,6 @@ namespace Recarro.Services.Vehicles
 
             var totalCars = vehicleQuery.Count();
 
-
             query.TotalCars = totalCars;
             query.Makes = makes;
             query.Vehicles = vehicles;
@@ -290,6 +289,35 @@ namespace Recarro.Services.Vehicles
                 .CurrentUser = null;
 
             this.data.SaveChanges();
+        }
+
+        public IEnumerable<VehicleServiceModel> RentedVehicles()
+        {
+            var vehicles = this.data
+                             .Vehicles
+                             .Where(v => v.CurrentUser != null)
+                             .Select(v => new VehicleServiceModel
+                             {
+                                 Id = v.Id,
+                                 Make = v.Make,
+                                 Model = v.Model,
+                                 Year = v.Year,
+                                 ImageURL = v.ImageURL,
+                             })
+                             .ToList();
+
+            foreach (var vehicle in vehicles)
+            {
+                vehicle.RentedUntil = this.data
+                                        .Rents
+                                        .Where(r => r.VehicleId == vehicle.Id)
+                                        .OrderByDescending(r => r.Id)
+                                        .Last()
+                                        .EndDate
+                                        .ToString("dd/MMMM/yyyy");
+            }
+
+            return vehicles;
         }
     }
 }
