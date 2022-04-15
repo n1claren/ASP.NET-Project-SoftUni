@@ -16,10 +16,7 @@ namespace Recarro.Controllers
             => this.data = data;
 
         [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         [Authorize]
         [HttpPost]

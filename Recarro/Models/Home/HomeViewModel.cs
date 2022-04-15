@@ -1,4 +1,5 @@
 ﻿using Recarro.Models.Vehicles;
+using System;
 using System.Collections.Generic;
 
 namespace Recarro.Models.Home
@@ -11,5 +12,10 @@ namespace Recarro.Models.Home
         public List<ListingViewModel> Vehicles { get; set; }
 
         public int VehiclesLeft { get; set; }
+
+        public object Should()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
