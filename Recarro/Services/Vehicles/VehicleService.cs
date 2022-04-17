@@ -140,7 +140,7 @@ namespace Recarro.Services.Vehicles
             vehicleQuery = query.Sorting switch
             {
                 VehicleSorting.Year => vehicleQuery.OrderByDescending(v => v.Year),
-                VehicleSorting.MakeModels => vehicleQuery.OrderByDescending(v => v.Make).ThenBy(v => v.Model),
+                VehicleSorting.MakeModels => vehicleQuery.OrderBy(v => v.Make).ThenBy(v => v.Model),
                 VehicleSorting.Created or _ => vehicleQuery.OrderByDescending(v => v.Id),
             };
 
