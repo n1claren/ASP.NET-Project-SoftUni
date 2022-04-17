@@ -261,12 +261,7 @@ namespace Recarro.Services.Vehicles
             var vehicle = this.data.Vehicles.Where(v => v.Id == vehicleId).FirstOrDefault();
             var user = this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
 
-            var bill = (decimal)(endDate - startDate).TotalDays * vehicle.PricePerDay;
-
-            if (bill == 0)
-            {
-                bill = vehicle.PricePerDay;
-            }
+            var bill = ((decimal)(endDate - startDate).TotalDays + 1) * vehicle.PricePerDay;
 
             var rent = new Rent
             {
